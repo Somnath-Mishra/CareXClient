@@ -1,4 +1,4 @@
-import { registerData } from "./auth.service";
+import { authService, registerData } from "./auth.service";
 import { axiosInstanceWithCredentials, axiosInstanceWithoutCredentials } from "./axiosConfig";
 
 interface uploadDoctorSpecificDetailsInterface{
@@ -30,7 +30,7 @@ class DoctorService{
                     avaliableTimeIds: data.avaliableTimeIds
                 },
                 {
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json",'Authorization': `Bearer ${authService.getTokens()}` }
                 }
             );
             return response;
@@ -69,7 +69,7 @@ class DoctorService{
     async getPatientDetails(patientId:string) {
         try {
             const response = await axiosInstanceWithCredentials.get('/doctor/get-patient-details', {
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` },
                 params: { patientId: patientId }
             });
             return response;

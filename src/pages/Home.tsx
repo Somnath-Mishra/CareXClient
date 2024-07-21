@@ -1,10 +1,10 @@
-import React from 'react'
+import { Appointment, Container} from '../components/index'
 
 function Home() {
   return (
-    <div>
-      this user home page
-    </div>
+    <Container>
+      <Appointment/>
+    </Container>
   )
 }
 

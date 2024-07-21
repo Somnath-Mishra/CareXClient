@@ -1,16 +1,16 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Header from '../components/Header/Header'
-import Footer from '../components/Footer/Footer'
+import { Outlet } from "react-router-dom";
+import { Container, Header, Footer } from "../components/index";
 
 function LandingPageLayout() {
   return (
     <div>
-      <Header/>
-      <Outlet/>
-      <Footer/>
+      <Header />
+      <Container>
+        <Outlet />
+      </Container>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default LandingPageLayout
+export default LandingPageLayout;

@@ -14,6 +14,9 @@ const searchProblemSlice = createSlice({
   reducers: {
     setSearchProblem: (state, action: PayloadAction<string>) => {
       state.searchProblem = action.payload;
+    },
+    clearSearchProblem: (state) => {
+      state.searchProblem = '';
     }
   }
 });
@@ -23,6 +26,6 @@ export const getSearchProblemSelector = createSelector(
   (searchProblemState: SearchProblemState) => searchProblemState.searchProblem
 );
 
-export const { setSearchProblem } = searchProblemSlice.actions;
+export const { setSearchProblem,clearSearchProblem } = searchProblemSlice.actions;
 
 export default searchProblemSlice.reducer;

@@ -13,7 +13,7 @@ export interface registerData {
     coverImage: File,
 }
 
-interface loginData {
+export interface loginData {
     userName: string
     password: string
     confirmPassword: string
@@ -22,6 +22,16 @@ interface loginData {
 class AuthService {
     constructor() {
 
+    }
+    async getTokens() {
+        let accessToken = authService.getAccessToken();
+        if (!accessToken) {
+            accessToken = await authService.refreshAccessToken();
+        }
+        if (!accessToken) {
+            throw new Error('Failed to get access token');
+        }
+        return accessToken;
     }
     async register(data: registerData) {
         try {
@@ -47,25 +57,44 @@ class AuthService {
     }
     async logout() {
         try {
-            const response = await axiosInstanceWithCredentials.post('/user/logout');
+            const response = await axiosInstanceWithCredentials.post('/user/logout',{},{
+                headers: { 'Content-Type': 'application/json' ,'Authorization': `Bearer ${this.getTokens()}`}
+            });
             return response;
         } catch (error) {
             console.error('There was an error in utils/auth.service.ts :: logout', error);
             throw error;
         }
     }
-    async refreshAccessToken(refreshToken:string) {
+    async refreshAccessToken() {
         try {
+            const refreshToken = this.getRefreshToken();
+            if(!refreshToken){
+                throw new Error('No refresh token available');
+            }
             const response = await axiosInstanceWithCredentials.post('/user/refresh-token',
                 { refreshToken },
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            return response;
+            if(response.status===200){
+                this.setAccessToken(response.data.data.accessToken);
+                return response.data.data.accessToken;
+            }
+            else{
+                this.removeTokens();
+                throw new Error(response.data.message || 'Failed to refresh access token');
+            }
         } catch (error) {
             console.error('There was an error in utils/auth.service.ts :: refreshAccessToken', error);
             throw error;
         }
     }
+    getAccessToken=()=>localStorage.getItem('accessToken');
+    getRefreshToken=()=>localStorage.getItem('refreshToken');
+    setAccessToken=(token:string)=>localStorage.setItem('accessToken',token);
+    setRefreshToken=(token:string)=>localStorage.setItem('refreshToken', token);
+    removeTokens=()=>{localStorage.removeItem('accessToken');localStorage.removeItem('refreshToken');}
+    
 }
 
 export const authService = new AuthService();

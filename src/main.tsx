@@ -1,85 +1,111 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ErrorPage from './pages/ErrorPage.tsx'
-import Problem from './pages/Problem.tsx'
-import Blog from './pages/Blog.tsx'
-import Dashboard from './pages/Dashboard.tsx'
-import HistoryPage from './pages/HistoryPage.tsx'
-import Payment from './pages/Payment.tsx'
-import Signup from './pages/Signup.tsx'
-import Login from './pages/Login.tsx'
-import LandingPageLayout from './pages/LandingPage.tsx'
-import UserLayout from './pages/UserLayout.tsx'
-import Home from './pages/Home.tsx'
-import { Provider } from 'react-redux'
-import { store } from './redux/store.ts'
-import DoctorList from './pages/DoctorList.tsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import ErrorPage from "./pages/ErrorPage.tsx";
+import ProblemPage from "./pages/ProblemPage.tsx";
+import Blog from "./pages/Blog.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import HistoryPage from "./pages/HistoryPage.tsx";
+import SignupPage from "./pages/SignupPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
+import LandingPageLayout from "./pages/LandingPage.tsx";
+import UserLayout from "./pages/UserLayout.tsx";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.ts";
+import DoctorList from "./pages/DoctorList.tsx";
+import Protected from "./components/AuthLayout.tsx";
+import Home from "./pages/Home.tsx";
+import SchedulePages from "./pages/SchedulePages.tsx";
 
 const router = createBrowserRouter([
-
   {
-    //This is for non-login or non-signup user
-    //Basics landing page for user
-    path: '/',
+    path: "/",
     element: <LandingPageLayout />,
     errorElement: <ErrorPage />,
-    children:[
+    children: [
       {
-        path:'signup',
-        element:<Signup/>
+        path: "signup",
+        element: <SignupPage />,
       },
       {
-        path:'login',
-        element:<Login/>
-      }
-    ]
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
   },
   {
-    path: 'user/:userId',
+    path: "user/",
     element: <UserLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        index:true,
-        path:'user/:userId',
-        element:<Home/>
+        index: true,
+        element: (
+          <Protected authentication={true}>
+            <Home />
+          </Protected>
+        ),
       },
       {
-        path: 'problem',
-        element: <Problem />,
+        path: "problem",
+        element: (
+          <Protected authentication={true}>
+            <ProblemPage />
+          </Protected>
+        ),
       },
       {
-        path: 'blog',
-        element: <Blog />
+        path: "blog",
+        element: (
+          <Protected authentication={true}>
+            <Blog />
+          </Protected>
+        ),
       },
       {
-        path:'dashboard',
-        element:<Dashboard/>,
+        path: "dashboard",
+        element: (
+          <Protected authentication={true}>
+            <Dashboard />
+          </Protected>
+        ),
       },
       {
-        path:'history',
-        element:<HistoryPage/>
+        path: "history",
+        element: (
+          <Protected authentication={true}>
+            <HistoryPage />
+          </Protected>
+        ),
       },
       {
-        path:'doctorList',
-        element: <DoctorList/>
+        path: "doctorList",
+        element: (
+          <Protected authentication={true}>
+            <DoctorList />
+          </Protected>
+        ),
       },
-      {
-        path:'payment',
-        element: <Payment/>
-      }
-    ]
-  },
-])
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    {/* <App /> */}
+      {
+        path: "schedule",
+        element: (
+          <Protected authentication={true}>
+            <SchedulePages />
+          </Protected>
+        ),
+      },
+      
+      
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  // <React.StrictMode>
     <Provider store={store}>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Provider>
-  </React.StrictMode>,
-)
+  // </React.StrictMode>
+);

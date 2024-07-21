@@ -1,10 +1,9 @@
-import React from 'react'
-
+import {Container,History} from '../components/index'
 function HistoryPage() {
   return (
-    <div>
-      this is history page
-    </div>
+    <Container>
+      <History/>
+    </Container>
   )
 }
 

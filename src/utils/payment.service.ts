@@ -1,4 +1,5 @@
 import { axiosInstanceWithCredentials } from "./axiosConfig";
+import { authService } from "./auth.service";
 
 class PaymentService {
     constructor() { }
@@ -9,7 +10,7 @@ class PaymentService {
                 doctorId: doctorId
             },
                 {
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
                 }
             );
             return response;
@@ -25,7 +26,7 @@ class PaymentService {
                 razorpay_signature: razorpay_signature
             },
                 {
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
                 }
             );
             return response;
@@ -43,12 +44,27 @@ class PaymentService {
                 doctorId: doctorId
             },
                 {
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
                 }
             );
             return response;
         } catch (error) {
             console.error('There was an error in utils/payment.service.ts :: makePaymentByStripe', error);
+            throw error;
+        }
+    }
+    async getClientSecretFromStripe(amount: number) {
+        try {
+            const response = await axiosInstanceWithCredentials.post('/payment/get-client-secret-from-stripe', {
+                amount: amount
+            },
+                {
+                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                }
+            );
+            return response;
+        } catch (error) {
+            console.error('There was an error in utils/payment.service.ts :: getClientSecretFromStripe', error);
             throw error;
         }
     }
