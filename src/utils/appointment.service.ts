@@ -47,11 +47,9 @@ class AppointmentService {
     async cancelAppointment(appointmentId: string) {
         try {
             console.log(appointmentId);
-            const response = await axiosInstanceWithCredentials.delete(`/appointment/cancel-appointment`,
+            const response = await axiosInstanceWithCredentials.post(`/appointment/cancel-appointment`,
+                {appointmentId},
                 {
-                    data: {
-                        appointmentId
-                    },
                     headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
                 },
 

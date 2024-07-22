@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import ProblemPage from "./pages/ProblemPage.tsx";
 import Blog from "./pages/Blog.tsx";
@@ -17,6 +17,13 @@ import DoctorList from "./pages/DoctorList.tsx";
 import Protected from "./components/AuthLayout.tsx";
 import Home from "./pages/Home.tsx";
 import SchedulePages from "./pages/SchedulePages.tsx";
+
+import {
+  ChangePassword,
+  UpdateAvatar,
+  UpdateCoverImage,
+  EditAccountDetails,
+} from "./components/index.ts";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +71,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "dashboard",
+        path: "profile",
         element: (
           <Protected authentication={true}>
             <Dashboard />
@@ -72,7 +79,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "history",
+        path: "appointment-history",
         element: (
           <Protected authentication={true}>
             <HistoryPage />
@@ -96,8 +103,43 @@ const router = createBrowserRouter([
           </Protected>
         ),
       },
-      
-      
+
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+      {
+        path: "change-cover-image",
+        element: (
+          <Protected authentication={true}>
+            <UpdateCoverImage />
+          </Protected>
+        ),
+      },
+      {
+        path: "change-avatar",
+        element: (
+          <Protected authentication={true}>
+            <UpdateAvatar />
+          </Protected>
+        ),
+      },
+      {
+        path: "change-password",
+        element: (
+          <Protected authentication={true}>
+            <ChangePassword />
+          </Protected>
+        ),
+      },
+      {
+        path: "update-account-details",
+        element: (
+          <Protected authentication={true}>
+            <EditAccountDetails />
+          </Protected>
+        ),
+      },
     ],
   },
 ]);

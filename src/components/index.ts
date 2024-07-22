@@ -15,6 +15,11 @@ import Login from "./Login"
 import DoctorSuggestion from "./DoctorSuggestion"
 import EditAccountDetails from "./EditAccountDetails"
 import PDFView from "./PDFView"
+import Calendar from "./Calendar"
+import ChangePassword from "./ChangePassword"
+import Profile from "./Profile"
+import UpdateAvatar from "./UpdateAvatar"
+import UpdateCoverImage from "./UpdateCoverImage"
 
 export{
     Header,
@@ -33,5 +38,10 @@ export{
     Login,
     DoctorSuggestion,
     EditAccountDetails,
-    PDFView
+    PDFView,
+    Calendar,
+    ChangePassword,
+    Profile,
+    UpdateAvatar,
+    UpdateCoverImage
 }

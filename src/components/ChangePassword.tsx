@@ -13,22 +13,23 @@ function ChangePassword() {
     const changePassword=(data)=>{
         setError('');
         setLoading(true);
-        const response=await userService.changePassword(data);
-        setLoading(false);
-        if(response.status===200){
+        userService.changePassword(data)
+        .then(()=>{
             alert("Password Changed Successfully");
+            setLoading(false);
             navigate('/user/profile');
-        }
-        else{
-            setError(response);
+        })
+        .catch((error)=>{
+            setError(error.message);
+            setLoading(false);
             console.log(error);
-        }
+        })
     }
   return (
     <>
     {error && <p>{error}</p>}
     {loading && <p>Loading...</p>}
-    <form onSubmit={handleSubmit(changePassword}>
+    <form onSubmit={handleSubmit(changePassword)}>
         <Input
         label='Old Password'
         type='password'

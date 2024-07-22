@@ -1,12 +1,10 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-
+import { Container, Profile } from "../components/index";
 function Dashboard() {
   return (
-    <div>
-      
-    </div>
-  )
+    <Container>
+      <Profile />
+    </Container>
+  );
 }
 
-export default Dashboard
+export default Dashboard;

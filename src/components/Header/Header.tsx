@@ -41,13 +41,18 @@ function Header() {
       active: (authStatus && role!=='doctor'),
     },
     {
-      name:'Signup',
-      slug:'/doctor/signup',
+      name:'Home',
+      slug:'/doctor',
       active:(authStatus && role==='doctor')
     },
     {
-      name:'Home',
-      slug:'/doctor',
+      name:'Schedule',
+      slug:'/doctor/schedule',
+      active:(authStatus && role==='doctor')
+    },
+    {
+      name:'Signup',
+      slug:'/doctor/signup',
       active:(authStatus && role==='doctor')
     },
     {

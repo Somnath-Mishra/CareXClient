@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import {DoctorSuggestion} from '../components/index';
+import {Container, DoctorSuggestion} from '../components/index';
 import { RootState } from '../redux/store';
 
 
@@ -20,10 +20,10 @@ function DoctorList() {
   });
 
   return (
-    <div>
-      <DoctorSuggestion searchProblem={searchProblem}/>
-    </div>
-  )
+    <Container>
+      <DoctorSuggestion searchProblem={searchProblem} />
+    </Container>
+  );
 }
 
 export default DoctorList

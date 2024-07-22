@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { userService } from "../utils/user.service";
 import { Button } from "./index";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
@@ -12,35 +11,36 @@ function Profile() {
   const user = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const navigate=useNavigate();
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!cImage) {
-      try {
-        const response = await userService.getCurrentUserDetails();
-        const coverImage = response.data.data.coverImage;
-        const avatar = response.data.data.avatar;
-        if (coverImage || avatar) {
-          setCoverImage(coverImage || avatar);
+      userService
+        .getCurrentUserDetails()
+        .then((response) => {
+          const coverImage = response.data.data.coverImage;
+          const avatar = response.data.data.avatar;
+          if (coverImage || avatar) {
+            setCoverImage(coverImage || avatar);
+            setLoading(false);
+          } else {
+            const defaultAvatar = "./defaultAvatar.png";
+            setCoverImage(defaultAvatar);
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          setError(error.message);
           setLoading(false);
-        } else {
-          const defaultAvatar = "./defaultAvatar.png";
-          setCoverImage(defaultAvatar);
-          setLoading(false);
-        }
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-        console.error(`Error occurred at fetchDoctorDetails() error: ${error}`);
-      }
+          console.error(
+            `Error occurred at fetchDoctorDetails() error: ${error}`
+          );
+        });
     } else {
       setCoverImage(cImage);
       setLoading(false);
     }
   });
-
-
 
   return (
     <div>
@@ -66,7 +66,7 @@ function Profile() {
       <Button
         children="Get Appointment History"
         onClick={() => {
-          navigate('/user/appointment-history')
+          navigate("/user/appointment-history");
         }}
       />
       <Button

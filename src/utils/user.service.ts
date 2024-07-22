@@ -58,7 +58,7 @@ class UserService{
     async updateAvatar(data:updateAvatarInterface) {
         try {
             const formData = new FormData();
-            formData.append('avatar', data.avatar);
+            formData.append('avatar', data);
             const response = await axiosInstanceWithCredentials.patch('/user/update-avatar', formData, {
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${authService.getTokens()}` }
             });
@@ -71,7 +71,7 @@ class UserService{
     async updateCoverImage(data:updateCoverImageInterface) {
         try {
             const formData = new FormData();
-            formData.append('coverImage', data.coverImage);
+            formData.append('coverImage', data);
             const response = await axiosInstanceWithCredentials.patch('/user/update-cover-image', formData, {
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${authService.getTokens()}` }
             });

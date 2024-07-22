@@ -14,21 +14,20 @@ function UpdateAvatar() {
 
   const updateAvatar = async (data) => {
     setError("");
-    const formData = new FormData();
-    if (data.avatar.length > 0) {
-      formData.append("avatar", data.avatar[0]);
-    }
-    try {
-      const response = await userService.updateAvatar(formData);
-      const userData = response.data.data;
-      if (userData) {
-        dispatch(authLogin(userData));
-        navigate("/user/profile");
-      }
-    } catch (error) {
-      setError(error.message);
-      console.log(error);
-    }
+    
+    userService
+      .updateAvatar(data.avatar[0])
+      .then((response) => {
+        const userData = response.data.data;
+        if (userData) {
+          dispatch(authLogin(userData));
+          navigate("/user/profile");
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log(error);
+      });
   };
   return (
     <>

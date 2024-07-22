@@ -1,6 +1,8 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { appointmentService } from "../utils/appointment.service";
-import { Button } from "./index";
+import { Button, Calendar } from "./index";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export enum modeEnum {
   online,
@@ -8,9 +10,11 @@ export enum modeEnum {
 }
 
 interface appointmentInterface {
-  appointmentId: string;
-  doctorName: string;
-  patientName: string;
+  _id: string;
+  doctorFirstName: string;
+  doctorLastName: string;
+  patientFirstName: string;
+  patientLastName: string;
   startTime: string;
   endTime: string;
   location: string;
@@ -21,18 +25,19 @@ function Appointment() {
   const [appointments, setAppointments] = useState<appointmentInterface[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const id = useId();
+  const userRole = useSelector((state: RootState) => state.user.role);
 
   useEffect(() => {
     setError(null);
     appointmentService
       .getUpcomingAppointmentDetails()
       .then((res) => {
+        console.log(res);
         setAppointments(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
+        setError(err.message); // Ensure the error message is a string
         setLoading(false);
         console.error(err);
       });
@@ -41,37 +46,45 @@ function Appointment() {
   const cancelAppointment = async (id: string) => {
     setError("");
     setLoading(true);
-    const response = await appointmentService.cancelAppointment(id);
-    if (response.status === 200) {
-      setError("");
-      setLoading(false);
-      setAppointments(
-        appointments.filter((appointment) => appointment.appointmentId !== id)
-      );
-    } else {
-      setError(response.data.message);
-      setLoading(false);
-    }
+    appointmentService
+      .cancelAppointment(id)
+      .then(() => {
+        setError("");
+        setAppointments(
+          appointments.filter((appointment) => appointment._id !== id)
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message); // Ensure the error message is a string
+        setLoading(false);
+      });
   };
 
   return (
     <div>
       {loading && <p>Loading...</p>}
       {appointments.length > 0 && <h3>Upcoming appointments</h3>}
+      <Calendar userRole={userRole} />
       {appointments.length > 0 &&
         appointments.map((appointment) => (
-          <div key={appointment.appointmentId}>
-            <p key={id}>Doctor Name: {appointment.doctorName}</p>
-            <p key={id}>Patient Name: {appointment.patientName}</p>
-            <p key={id}>Start Time: {appointment.startTime}</p>
-            <p key={id}>End Time: {appointment.endTime}</p>
-            <p key={id}>Location: {appointment.location}</p>
-            <p key={id}>Mode: {appointment.mode}</p>
+          <div key={appointment._id}>
+            <p>
+              Doctor Name: {appointment.doctorFirstName}{" "}
+              {appointment.doctorLastName}
+            </p>
+            <p>
+              Patient Name: {appointment.patientFirstName}{" "}
+              {appointment.patientLastName}
+            </p>
+            <p>Start Time: {appointment.startTime}</p>
+            <p>End Time: {appointment.endTime}</p>
+            <p>Location: {appointment.location}</p>
+            <p>Mode: {appointment.mode}</p>
             <Button
-              key={id}
               children="Cancel Appointment"
               onClick={() => {
-                cancelAppointment(appointment.appointmentId);
+                cancelAppointment(appointment._id);
               }}
             />
           </div>

@@ -27,13 +27,11 @@ class AvaliableTimeService{
             throw error;
         }
     }
-    async getAvaliableTime(avaliableTimeId:string) {
+    async getAvaliableTime() {
         try {
             const response = await axiosInstanceWithCredentials.get('/avaliableTime/get-avaliable-time', {
                 headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${await this.getTokens()}` },
-                params:{
-                    avaliableTimeId:avaliableTimeId
-                }
+                
             });
             return response.data;
         } catch (error) {

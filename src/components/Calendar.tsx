@@ -6,22 +6,26 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
+import { appointmentService } from "../utils/appointment.service";
 
-function getRandomNumber(min: number, max: number) {
-  return Math.round(Math.random() * (max - min) + min);
-}
 
-/**
- * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
- * ⚠️ No IE11 support
- */
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
+function fetchHighlightedDaysFromAppointment(date: Dayjs, { signal }: { signal: AbortSignal },userRole:string) {
   return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() =>
-        getRandomNumber(1, daysInMonth)
-      );
+    const timeout = setTimeout(async() => {
+
+      const upcomingAppointmentDetails=await appointmentService.getUpcomingAppointmentDetails();
+      const daysToHighlight=[];
+      const currentDate=new Date();
+      const currentMonth=currentDate.getMonth();
+      const currentYear=currentDate.getFullYear();
+
+      upcomingAppointmentDetails.data.data.forEach(item=>{
+        const startTime=new Date(item.startTime);
+        if(startTime.getMonth()===currentMonth && startTime.getFullYear()===currentYear){
+          daysToHighlight.push(startTime.getDate());
+        }
+      })
+
 
       resolve({ daysToHighlight });
     }, 500);
@@ -33,22 +37,24 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   });
 }
 
-const initialValue = dayjs("2024-01-01");
+const initialValue = dayjs(new Date());
 
 function ServerDay(
-  props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }
+  props: PickersDayProps<Dayjs> & { highlightedDays?: number[] },userRole:string
 ) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
     !props.outsideCurrentMonth &&
     highlightedDays.indexOf(props.day.date()) >= 0;
+    
+    const emoji = userRole === "user" ? "🩺" : "🏥";
 
   return (
     <Badge
       key={props.day.toString()}
       overlap="circular"
-      badgeContent={isSelected ? "🌚" : undefined}
+      badgeContent={isSelected ? emoji : undefined}
     >
       <PickersDay
         {...other}
@@ -59,16 +65,20 @@ function ServerDay(
   );
 }
 
-export default function DateCalendarServerRequest() {
+export default function Calendar(userRole:string) {
   const requestAbortController = React.useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
 
   const fetchHighlightedDays = (date: Dayjs) => {
     const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
+    fetchHighlightedDaysFromAppointment(
+      date,
+      {
+        signal: controller.signal,
+      },
+      userRole
+    )
       .then(({ daysToHighlight }) => {
         setHighlightedDays(daysToHighlight);
         setIsLoading(false);
