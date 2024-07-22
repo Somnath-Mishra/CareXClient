@@ -41,25 +41,25 @@ class DoctorService{
     }
     async register(data:doctorRegisterInterface) {
         try {
-            const formData = new FormData();
-            formData.append('avatar', data.avatar);
-            formData.append('coverImage', data.coverImage);
-            formData.append('userName', data.userName);
-            formData.append('email', data.email);
-            formData.append('password', data.password);
-            formData.append('confirmPassword', data.confirmPassword);
-            formData.append('firstName', data.firstName);
-            formData.append('lastName', data.lastName);
-            formData.append('address', data.address);
-            formData.append('role', data.role);
-            formData.append('email', data.email);
-            formData.append('password', data.password);
-            formData.append('licence', data.licence);
-            formData.append('degree', data.degree);
-            formData.append('instituteName', data.instituteName);
-            formData.append('specialization', JSON.stringify(data.specialization));
-            formData.append('visitFees', JSON.stringify(data.visitFees));
-            const response = await axiosInstanceWithoutCredentials.post('/doctor/doctor-register', formData);
+            // const formData = new FormData();
+            // formData.append('avatar', data.avatar);
+            // formData.append('coverImage', data.coverImage);
+            // formData.append('userName', data.userName);
+            // formData.append('email', data.email);
+            // formData.append('password', data.password);
+            // formData.append('confirmPassword', data.confirmPassword);
+            // formData.append('firstName', data.firstName);
+            // formData.append('lastName', data.lastName);
+            // formData.append('address', data.address);
+            // formData.append('role', data.role);
+            // formData.append('email', data.email);
+            // formData.append('password', data.password);
+            // formData.append('licence', data.licence);
+            // formData.append('degree', data.degree);
+            // formData.append('instituteName', data.instituteName);
+            // formData.append('specialization', JSON.stringify(data.specialization));
+            // formData.append('visitFees', JSON.stringify(data.visitFees));
+            const response = await axiosInstanceWithoutCredentials.post('/doctor/doctor-register', data);
             return response;
         } catch (error) {
             console.error('There was an error in services/doctor.service.ts :: register', error);

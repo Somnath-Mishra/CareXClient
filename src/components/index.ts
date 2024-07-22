@@ -20,6 +20,7 @@ import ChangePassword from "./ChangePassword"
 import Profile from "./Profile"
 import UpdateAvatar from "./UpdateAvatar"
 import UpdateCoverImage from "./UpdateCoverImage"
+import DoctorSchedule from "./DoctorSchedule"
 
 export{
     Header,
@@ -43,5 +44,6 @@ export{
     ChangePassword,
     Profile,
     UpdateAvatar,
-    UpdateCoverImage
+    UpdateCoverImage,
+    DoctorSchedule
 }

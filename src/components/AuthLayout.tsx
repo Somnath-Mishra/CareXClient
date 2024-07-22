@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector,TypedUseSelectorHook } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { UserRootState } from "../redux/slices/UserSlice";
-import { authService } from "../utils/auth.service";
 
 interface protectedProps{
     children:React.ReactNode,

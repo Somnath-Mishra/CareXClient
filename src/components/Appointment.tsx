@@ -33,7 +33,7 @@ function Appointment() {
       .getUpcomingAppointmentDetails()
       .then((res) => {
         console.log(res);
-        setAppointments(res.data.data);
+        if (res.data.data.length > 0) setAppointments(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -65,7 +65,7 @@ function Appointment() {
     <div>
       {loading && <p>Loading...</p>}
       {appointments.length > 0 && <h3>Upcoming appointments</h3>}
-      <Calendar userRole={userRole} />
+      {appointments.length > 0 && <Calendar userRole={userRole} />}
       {appointments.length > 0 &&
         appointments.map((appointment) => (
           <div key={appointment._id}>

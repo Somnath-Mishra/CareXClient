@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm, SubmitHandler, set } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../utils/auth.service";
@@ -31,27 +31,31 @@ interface SignupFormExtraDetailsForDoctor {
   visitFees: number;
   degree: string;
   instituteName: string;
-  specialization: string[];
+  specialization: string;
 }
 
 function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isDoctor, setIsDoctor] = useState("false");
+  const [isDoctor, setIsDoctor] = useState(false);
   const dispatch = useDispatch();
-  const [basicRegisterData, setBasicRegisterData] =
-    useState<SignupFormInputs>();
+  const [basicRegisterData, setBasicRegisterData] = useState<FormData | null>(
+    null
+  );
+
   const {
     register,
     handleSubmit,
-    setValue,
     watch,
     formState: { errors },
   } = useForm<SignupFormInputs>();
 
-  const { register: registerForDoctor, handleSubmit: handleSubmitForDoctor } =
-    useForm<SignupFormExtraDetailsForDoctor>();
+  const {
+    register: registerForDoctor,
+    handleSubmit: handleSubmitForDoctor,
+    formState: { errors: doctorErrors },
+  } = useForm<SignupFormExtraDetailsForDoctor>();
 
   const create: SubmitHandler<SignupFormInputs> = async (
     data: SignupFormInputs
@@ -80,6 +84,7 @@ function Signup() {
     try {
       if (data.role === Role.User) {
         const response = await authService.register(formData);
+        console.log(response);
         const userData = response?.data?.data;
         if (userData) {
           dispatch(authLogin(userData));
@@ -89,7 +94,8 @@ function Signup() {
       }
       if (data.role === Role.Doctor) {
         setBasicRegisterData(formData);
-        setIsDoctor("true");
+        setLoading(false);
+        setIsDoctor(true);
       }
     } catch (error: any) {
       setLoading(false);
@@ -97,29 +103,36 @@ function Signup() {
     }
   };
 
-  const submitExtraDetailsForDoctor = (data) => {
+  const submitExtraDetailsForDoctor: SubmitHandler<
+    SignupFormExtraDetailsForDoctor
+  > = async (data) => {
+    setLoading(true);
     const formDataDoctor = new FormData();
     formDataDoctor.append("licence", data.licence[0]);
     formDataDoctor.append("visitFees", data.visitFees.toString());
     formDataDoctor.append("degree", data.degree);
     formDataDoctor.append("instituteName", data.instituteName);
-    formDataDoctor.append("specialization", data.specialization.toString());
-    basicRegisterData.forEach((value, key) => {
-      formDataDoctor.append(key, value);
-    });
-    doctorService
-      .register(data)
-      .then((res) => {
-        const userData = res?.data?.data;
-        if (userData) {
-          dispatch(authLogin(userData));
-          navigate("/doctor");
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
-        console.error(err);
-      });
+    formDataDoctor.append("specialization", data.specialization);
+
+    if (basicRegisterData) {
+      for (const [key, value] of basicRegisterData.entries()) {
+        formDataDoctor.append(key, value as string);
+      }
+    }
+
+    try {
+      const res = await doctorService.register(formDataDoctor);
+      const userData = res?.data?.data;
+      if (userData) {
+        dispatch(authLogin(userData));
+        setLoading(false);
+        navigate("/doctor");
+      }
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.message);
+      console.error(err);
+    }
   };
 
   return (
@@ -237,31 +250,40 @@ function Signup() {
           <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
         </div>
       )}
-      {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
       {isDoctor && (
-        <form onClick={handleSubmitForDoctor(submitExtraDetailsForDoctor)}>
+        <form onSubmit={handleSubmitForDoctor(submitExtraDetailsForDoctor)}>
           <Input
             label="licence"
             type="file"
-            {...registerForDoctor("licence")}
+            {...registerForDoctor("licence", { required: true })}
           />
           <Input
-            label="visitFees"
+            label="Visit Fees"
             type="number"
-            {...registerForDoctor("visitFees")}
-          />
-          <Input label="degree" type="text" {...registerForDoctor("degree")} />
-          <Input
-            label="instituteName"
-            type="text"
-            {...registerForDoctor("instituteName")}
+            placeholder="Enter your visit fees"
+            {...registerForDoctor("visitFees", { required: true })}
           />
           <Input
-            label="specialization comma separated"
+            label="Degree"
             type="text"
-            {...registerForDoctor("specialization")}
+            placeholder="Enter your degree"
+            {...registerForDoctor("degree", { required: true })}
           />
-          <Button type="submit">Submit</Button>
+          <Input
+            label="Institute Name"
+            type="text"
+            placeholder="Enter your institute name"
+            {...registerForDoctor("instituteName", { required: true })}
+          />
+          <Input
+            label="Specialization (comma separated)"
+            type="text"
+            placeholder="Enter your specialization"
+            {...registerForDoctor("specialization", { required: true })}
+          />
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
         </form>
       )}
     </div>

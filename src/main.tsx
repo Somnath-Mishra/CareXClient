@@ -24,6 +24,8 @@ import {
   UpdateCoverImage,
   EditAccountDetails,
 } from "./components/index.ts";
+import DoctorHome from "./pages/DoctorHome.tsx";
+import DoctorSchedulePage from "./pages/DoctorSchedulePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -142,6 +144,81 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "doctor/",
+    element: <UserLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Protected authentication={true}>
+            <DoctorHome />
+          </Protected>
+        ),
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+      {
+        path: "change-cover-image",
+        element: (
+          <Protected authentication={true}>
+            <UpdateCoverImage />
+          </Protected>
+        ),
+      },
+      {
+        path: "change-avatar",
+        element: (
+          <Protected authentication={true}>
+            <UpdateAvatar />
+          </Protected>
+        ),
+      },
+      {
+        path: "change-password",
+        element: (
+          <Protected authentication={true}>
+            <ChangePassword />
+          </Protected>
+        ),
+      },
+      {
+        path: "update-account-details",
+        element: (
+          <Protected authentication={true}>
+            <EditAccountDetails />
+          </Protected>
+        ),
+      },
+      {
+        path: "schedule",
+        element: (
+          <Protected authentication={true}>
+            <DoctorSchedulePage/>
+          </Protected>
+        ),
+      },
+      {
+        path: "appointment-history",
+        element: (
+          <Protected authentication={true}>
+            <HistoryPage />
+          </Protected>
+        ),
+      },
+      {
+        path:'profile'
+        ,element:(
+          <Protected authentication={true}>
+            <Dashboard />
+          </Protected>
+        )
+      }
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

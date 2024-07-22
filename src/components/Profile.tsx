@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { userService } from "../utils/user.service";
@@ -54,31 +54,31 @@ function Profile() {
       <Button
         children="Change Cover Image"
         onClick={() => {
-          navigate("/user/change-cover-image");
+          navigate(`/${user.role}/change-cover-image`);
         }}
       />
       <Button
         children="Change Avatar"
         onClick={() => {
-          navigate("/user/change-avatar");
+          navigate(`/${user.role}/change-avatar`);
         }}
       />
       <Button
         children="Get Appointment History"
         onClick={() => {
-          navigate("/user/appointment-history");
+          navigate(`/${user.role}/appointment-history`);
         }}
       />
       <Button
         children="Change Password"
         onClick={() => {
-          navigate("/user/change-password");
+          navigate(`/${user.role}/change-password`);
         }}
       />
       <Button
         children="Update Account Details"
         onClick={() => {
-          navigate("/user/update-account-details");
+          navigate(`/${user.role}/update-account-details`);
         }}
       />
     </div>
