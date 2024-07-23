@@ -6,7 +6,7 @@ import LogoutBtn from "./LogoutBtn"
 import Button from "./Button"
 import Input from "./Input"
 import Schedule from "./Schedule"
-import CheckoutForm from "./CheckoutForm"
+// import CheckoutForm from "./CheckoutForm"
 import Appointment from "./Appointment"
 import History from "./History"
 import SearchProblem from "./SearchProblem"
@@ -21,6 +21,7 @@ import Profile from "./Profile"
 import UpdateAvatar from "./UpdateAvatar"
 import UpdateCoverImage from "./UpdateCoverImage"
 import DoctorSchedule from "./DoctorSchedule"
+import Loading from "./Loading"
 
 export{
     Header,
@@ -31,7 +32,7 @@ export{
     Button,
     Input,
     Schedule   ,
-    CheckoutForm,
+    // CheckoutForm,
     Appointment,
     History,
     SearchProblem,
@@ -45,5 +46,6 @@ export{
     Profile,
     UpdateAvatar,
     UpdateCoverImage,
-    DoctorSchedule
+    DoctorSchedule,
+    Loading
 }

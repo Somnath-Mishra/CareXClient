@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { appointmentService } from "../utils/appointment.service";
-import { Button, Calendar } from "./index";
+import { Button, Calendar, Loading } from "./index";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
-export enum modeEnum {
+enum modeEnum {
   online,
   offline,
 }
@@ -63,7 +63,7 @@ function Appointment() {
 
   return (
     <div>
-      {loading && <p>Loading...</p>}
+      {loading && <Loading/>}
       {appointments.length > 0 && <h3>Upcoming appointments</h3>}
       {appointments.length > 0 && <Calendar userRole={userRole} />}
       {appointments.length > 0 &&

@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import { set, useForm } from 'react-hook-form'
-import { Button, Input } from './index'
+import  { useState } from 'react'
+import {  useForm } from 'react-hook-form'
+import { Button, Input, Loading } from './index'
 import { userService } from '../utils/user.service';
 import { useNavigate } from 'react-router-dom';
 
+interface changePasswordInterface{
+    oldPassword:string,
+    newPassword:string,
+    confirmPassword:string
+}
+
 function ChangePassword() {
-    const {register,handleSubmit}=useForm();
+    const {register,handleSubmit}=useForm<changePasswordInterface>();
     const [error,setError]=useState('');
     const navigate=useNavigate();
     const [loading,setLoading]=useState(false);
 
-    const changePassword=(data)=>{
+    const changePassword=(data:changePasswordInterface)=>{
         setError('');
         setLoading(true);
         userService.changePassword(data)
@@ -28,7 +34,7 @@ function ChangePassword() {
   return (
     <>
     {error && <p>{error}</p>}
-    {loading && <p>Loading...</p>}
+    {loading && <Loading/>}
     <form onSubmit={handleSubmit(changePassword)}>
         <Input
         label='Old Password'

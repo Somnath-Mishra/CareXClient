@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Document, Page } from "react-pdf";
 
-interface pdfLinkInterface{
-    pdfLink:string
+interface PDFViewProps {
+  pdfLink: string;
 }
 
-function PDFView(pdfLink:pdfLinkInterface) {
-  const [numPages, setNumPages] = useState<number>();
+const PDFView: React.FC<PDFViewProps> = ({ pdfLink }) => {
+  const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -19,10 +19,10 @@ function PDFView(pdfLink:pdfLinkInterface) {
         <Page pageNumber={pageNumber} />
       </Document>
       <p>
-        Page {pageNumber} of {numPages}
+        Page {pageNumber} of {numPages || "..."}
       </p>
     </div>
   );
-}
+};
 
 export default PDFView;

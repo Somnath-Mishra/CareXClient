@@ -8,26 +8,61 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
 import { appointmentService } from "../utils/appointment.service";
 
+interface Props {
+  userRole: string;
+}
 
-function fetchHighlightedDaysFromAppointment(date: Dayjs, { signal }: { signal: AbortSignal },userRole:string) {
-  return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-    const timeout = setTimeout(async() => {
+interface appointmentInterface{
+  _id:string,
+  startTime:string,
+  endTime:string,
+  location:string,
+  mode:string,
+  doctorFirstName:string,
+  doctorLastName:string
+  patientFirstName:string,
+  patientLastName:string
+}
 
-      const upcomingAppointmentDetails=await appointmentService.getUpcomingAppointmentDetails();
-      const daysToHighlight=[];
-      const currentDate=new Date();
-      const currentMonth=currentDate.getMonth();
-      const currentYear=currentDate.getFullYear();
+interface FetchHighlightedDaysParams {
+  date: Dayjs;
+  signal: AbortSignal;
+  userRole: string;
+}
 
-      upcomingAppointmentDetails.data.data.forEach(item=>{
-        const startTime=new Date(item.startTime);
-        if(startTime.getMonth()===currentMonth && startTime.getFullYear()===currentYear){
-          daysToHighlight.push(startTime.getDate());
-        }
-      })
+interface FetchHighlightedDaysResult {
+  daysToHighlight: number[];
+}
 
+function fetchHighlightedDaysFromAppointment({
+  signal,
+}: FetchHighlightedDaysParams): Promise<FetchHighlightedDaysResult> {
+  return new Promise<FetchHighlightedDaysResult>((resolve, reject) => {
+    const timeout = setTimeout(async () => {
+      try {
+        const upcomingAppointmentDetails =
+          await appointmentService.getUpcomingAppointmentDetails();
+        const daysToHighlight: number[] = [];
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
 
-      resolve({ daysToHighlight });
+        upcomingAppointmentDetails.data.data.forEach(
+          (item: appointmentInterface) => {
+            const startTime = new Date(item.startTime);
+            if (
+              startTime.getMonth() === currentMonth &&
+              startTime.getFullYear() === currentYear
+            ) {
+              daysToHighlight.push(startTime.getDate());
+            }
+          }
+        );
+
+        resolve({ daysToHighlight });
+      } catch (error) {
+        reject(error);
+      }
     }, 500);
 
     signal.onabort = () => {
@@ -39,20 +74,27 @@ function fetchHighlightedDaysFromAppointment(date: Dayjs, { signal }: { signal: 
 
 const initialValue = dayjs(new Date());
 
-function ServerDay(
-  props: PickersDayProps<Dayjs> & { highlightedDays?: number[] },userRole:string
-) {
-  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+interface ServerDayProps extends PickersDayProps<Dayjs> {
+  highlightedDays?: number[];
+  userRole: string;
+}
+
+function ServerDay(props: ServerDayProps) {
+  const {
+    highlightedDays = [],
+    day,
+    outsideCurrentMonth,
+    userRole,
+    ...other
+  } = props;
 
   const isSelected =
-    !props.outsideCurrentMonth &&
-    highlightedDays.indexOf(props.day.date()) >= 0;
-    
-    const emoji = userRole === "user" ? "🩺" : "🏥";
+    !outsideCurrentMonth && highlightedDays.indexOf(day.date()) >= 0;
+  const emoji = userRole === "user" ? "🩺" : "🏥";
 
   return (
     <Badge
-      key={props.day.toString()}
+      key={day.toString()}
       overlap="circular"
       badgeContent={isSelected ? emoji : undefined}
     >
@@ -65,20 +107,18 @@ function ServerDay(
   );
 }
 
-export default function Calendar(userRole:string) {
+export default function Calendar({ userRole }: Props) {
   const requestAbortController = React.useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
+  const [highlightedDays, setHighlightedDays] = React.useState<number[]>([]);
 
   const fetchHighlightedDays = (date: Dayjs) => {
     const controller = new AbortController();
-    fetchHighlightedDaysFromAppointment(
+    fetchHighlightedDaysFromAppointment({
       date,
-      {
-        signal: controller.signal,
-      },
-      userRole
-    )
+      signal: controller.signal,
+      userRole,
+    })
       .then(({ daysToHighlight }) => {
         setHighlightedDays(daysToHighlight);
         setIsLoading(false);
@@ -86,7 +126,7 @@ export default function Calendar(userRole:string) {
       .catch((error) => {
         // ignore the error if it's caused by `controller.abort`
         if (error.name !== "AbortError") {
-          throw error;
+          console.error(error);
         }
       });
 
@@ -97,7 +137,7 @@ export default function Calendar(userRole:string) {
     fetchHighlightedDays(initialValue);
     // abort request on unmount
     return () => requestAbortController.current?.abort();
-  }, []);
+  });
 
   const handleMonthChange = (date: Dayjs) => {
     if (requestAbortController.current) {
@@ -119,12 +159,13 @@ export default function Calendar(userRole:string) {
         onMonthChange={handleMonthChange}
         renderLoading={() => <DayCalendarSkeleton />}
         slots={{
-          day: ServerDay,
-        }}
-        slotProps={{
-          day: {
-            highlightedDays,
-          } as any,
+          day: (dayProps) => (
+            <ServerDay
+              {...dayProps}
+              userRole={userRole}
+              highlightedDays={highlightedDays}
+            />
+          ),
         }}
       />
     </LocalizationProvider>

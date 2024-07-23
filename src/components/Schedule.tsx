@@ -9,10 +9,6 @@ import { paymentService } from "../utils/payment.service";
 import { conf } from "../conf/conf";
 import { userService } from "../utils/user.service";
 import { appointmentService } from "../utils/appointment.service";
-// import { set } from "react-hook-form";
-// import { Elements } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
-// import CheckoutForm from "./CheckoutForm";
 
 interface Mode {
   online: "online";
@@ -27,19 +23,15 @@ interface ScheduleDetailsInterface {
   location: string;
 }
 
-// const stripePromise = loadStripe(conf.stripePublicApiKey);
-
 const Schedule: React.FC = () => {
-  const [schedule, setSchedule] = useState<ScheduleDetailsInterface[]>(
-    []
-  );
+  const [schedule, setSchedule] = useState<ScheduleDetailsInterface[]>([]);
   const navigate = useNavigate();
   const Razorpay = useRazorpay();
-  const userId = useSelector((state: RootState) => state.user.userData?.userId);
+  const userId = useSelector((state: RootState) => state.user.userId);
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [error,setError]=useState('');
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const visitFees = useSelector((state: RootState) => state.schedule.visitFees);
   const doctorId = useSelector((state: RootState) => state.schedule.doctorId);
@@ -51,7 +43,7 @@ const Schedule: React.FC = () => {
         setUserName(response.data.data.userName);
         setEmail(response.data.data.email);
         setPhone(response.data.data.phone);
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
         console.error(`Error fetching user details: ${error}`);
       }
@@ -62,16 +54,18 @@ const Schedule: React.FC = () => {
         const response = await scheduleService.getSchedules(doctorId);
         const scheduleDetails = response.data.data;
         if (scheduleDetails) {
-          if (scheduleDetails.mode === "online") {
-            scheduleDetails.location = "will be assigned Google Meet link";
-          }
+          scheduleDetails.forEach((schedule: ScheduleDetailsInterface) => {
+            if (schedule.mode === "online") {
+              schedule.location = "will be assigned Google Meet link";
+            }
+          });
           setSchedule(scheduleDetails);
         } else {
-          setError(error.message);
-          navigate(`
-            /user/doctorList`);
+          setError("No schedule details found");
+          navigate("/user/doctorList");
         }
-      } catch (error) {
+      } catch (error: any) {
+        setError(error.message);
         console.error(`Error fetching schedule: ${error}`);
       }
     };
@@ -110,39 +104,15 @@ const Schedule: React.FC = () => {
             }
           },
         };
-        const paymentObject = new window.Razorpay(options);
+        const paymentObject = new Razorpay(options);
         paymentObject.open();
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
         console.error(`Error during payment: ${error}`);
       }
     },
-    [Razorpay]
+    [Razorpay, doctorId, email, phone, userName]
   );
-
-  // const handlePaymentByStripe = useCallback(
-  //   async (visitFees: number, scheduleId: string) => {
-  //     try {
-  //       const stripe = await stripePromise;
-  //       const checkoutSession = await paymentService.makePaymentByStripe(
-  //         visitFees,
-  //         stripe?.createToken,
-  //         doctorId,
-  //       );
-  //       const result = await stripe?.redirectToCheckout({
-  //         sessionId: checkoutSession.data.data.sessionId,
-  //       });
-  //       if (result?.error) {
-  //         console.error(result.error.message);
-  //       } else {
-  //         bookSchedule(scheduleId, checkoutSession.data.data.id);
-  //       }
-  //     } catch (error) {
-  //       console.error(`Error during payment: ${error}`);
-  //     }
-  //   },
-  //   []
-  // );
 
   const bookSchedule = async (scheduleId: string, paymentId: string) => {
     try {
@@ -164,19 +134,12 @@ const Schedule: React.FC = () => {
       });
       setLoading(false);
       navigate(`/user`);
-    } catch (error) {
-      setError(error.message||"Error in bookSchedule() in Schedule.tsx");
+    } catch (error: any) {
+      setError(error.message || "Error in bookSchedule() in Schedule.tsx");
       console.error(`Error booking schedule: ${error}`);
     }
   };
-  // if(error){
-  //   return <h4>{error}</h4>;
-  // }
-  // if(loading){
-  //   return <h4>Loading...</h4>;
-  // }
 
-  
   return (
     <div>
       {error && <h4>{error}</h4>}

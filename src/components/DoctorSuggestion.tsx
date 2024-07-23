@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../utils/user.service";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { Button } from "./index";
+import { useDispatch } from "react-redux";
+import { Button, Loading } from "./index";
 import { setSchedule } from "../redux/slices/scheduleSlice";
 
 interface DoctorSuggestionProps {
@@ -26,49 +25,51 @@ const DoctorSuggestion: React.FC<DoctorSuggestionProps> = ({
   searchProblem,
 }) => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const userId = useSelector((state: RootState) => state.user.userData?.userId);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchDoctorDetails = async () => {
+  const fetchDoctorDetails = useCallback(() => {
+    setLoading(true);
+    userService
+      .getDoctorDetailsByPatientProblems(searchProblem)
+      .then((response) => {
+        setDoctors(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, [searchProblem]);
+
+  const bookAppointment = (doctorId: string, visitFees: number) => {
+    setLoading(true);
     try {
-      const response = await userService.getDoctorDetailsByPatientProblems(
-        searchProblem
-      );
-      setDoctors(response.data.data);
+      dispatch(setSchedule({ doctorId, visitFees }));
       setLoading(false);
+      navigate(`/user/schedule`);
     } catch (error) {
-      setError(error.message);
       setLoading(false);
-      console.error(`Error occurred at fetchDoctorDetails() error: ${error}`);
+      console.error(`Error occurred at bookAppointment() error: ${error}`);
     }
   };
 
   useEffect(() => {
     setError("");
     if (!searchProblem) {
+      setLoading(false);
       navigate(`/user/problem`);
     } else {
       fetchDoctorDetails();
     }
-  }, [searchProblem, navigate, userId]);
-
-  const bookAppointment = (doctorId: string, visitFees: number) => {
-    try {
-      dispatch(setSchedule({ doctorId, visitFees }));
-      navigate(`/user/schedule`);
-    } catch (error) {
-      console.error(`Error occurred at bookAppointment() error: ${error}`);
-    }
-  };
-
+  }, [searchProblem, navigate, fetchDoctorDetails]);
 
   return (
     <div>
       {error && <h4>{error}</h4>}
-      {loading && <h4>Loading...</h4>}
+      {loading && <Loading />}
       {!loading && doctors.length === 0 && <h4>No doctors found</h4>}
       {doctors.map((doctor: Doctor) => (
         <div className="doctorDetails" key={doctor._id}>
@@ -98,10 +99,9 @@ const DoctorSuggestion: React.FC<DoctorSuggestionProps> = ({
           <div className="fees">
             <h5>{doctor.visitFees}</h5>
           </div>
-          <Button
-            children="Book Appointment"
-            onClick={() => bookAppointment(doctor._id, doctor.visitFees)}
-          />
+          <Button onClick={() => bookAppointment(doctor._id, doctor.visitFees)}>
+            Book Appointment
+          </Button>
         </div>
       ))}
     </div>

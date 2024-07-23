@@ -1,36 +1,42 @@
 import { useEffect, useState } from "react";
-import { modeEnum } from "./Appointment";
 import { appointmentService } from "../utils/appointment.service";
-import { Button, PDFView, Input } from "./index";
+import { Button, PDFView, Input, Loading } from "./index";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-interface appointmentHistory {
+enum ModeEnum {
+  online = "online",
+  offline = "offline",
+}
+
+interface PrescriptionInterface {
+  prescription: FileList;
+}
+
+interface AppointmentHistory {
   _id: string;
   doctorFirstName: string;
   doctorLastName: string;
   patientFirstName: string;
   patientLastName: string;
   startTime: string;
-  EndTime: string;
+  endTime: string;
   location: string;
-  mode: keyof modeEnum;
+  mode: keyof typeof ModeEnum;
   prescription: string;
 }
 
-function History() {
-  const [appointments, setAppointments] = useState<appointmentHistory[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [showPdf, setShowPdf] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [showUpload, setShowUpload] = useState(false);
-
-  //This for upload prescription storing appointmentId
-  const [appointmentId,setAppointmentId]=useState('');
+const History: React.FC = () => {
+  const [appointments, setAppointments] = useState<AppointmentHistory[]>([]);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showPdf, setShowPdf] = useState<boolean>(false);
+  const [pdfUrl, setPdfUrl] = useState<string>("");
+  const [showUpload, setShowUpload] = useState<boolean>(false);
+  const [appointmentId, setAppointmentId] = useState<string>("");
   const userRole = useSelector((state: RootState) => state.user.role);
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register } = useForm<PrescriptionInterface>();
 
   const handleViewClick = (pdfLink: string) => {
     setPdfUrl(pdfLink);
@@ -51,26 +57,27 @@ function History() {
     document.body.removeChild(link);
   };
 
-  const bringUploadPrescription = (id:string) => {
+  const bringUploadPrescription = (id: string) => {
     setAppointmentId(id);
     setShowUpload(true);
   };
 
-  const uploadPrescription=(data)=>{
+  const uploadPrescription: SubmitHandler<PrescriptionInterface> = (data) => {
     setLoading(true);
-    setError('');
-    appointmentService.addPrescription(appointmentId,data.prescription[0])
-    .then(()=>{
-      alert('Prescription Upload Successful');
-      setShowUpload(false);
-      setLoading(false);
-    })
-    .catch((error)=>{
-      setError(error.message);
-      setLoading(false);
-      console.log(error);
-    })
-  }
+    setError("");
+    appointmentService
+      .addPrescription(appointmentId, data.prescription[0])
+      .then(() => {
+        alert("Prescription Upload Successful");
+        setShowUpload(false);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     appointmentService
@@ -80,67 +87,67 @@ function History() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.message);
         setLoading(false);
       });
-  });
+  }, []);
+
   return (
     <div>
-      {!showPdf && appointments && <h1>Appointment History</h1>}
-      {!showPdf && loading && <p>Loading...</p>}
-      {!showPdf &&
-        appointments &&
-        appointments.map((appointment) => {
-          return (
-            <div key={appointment._id}>
-              <p>
-                Doctor Name: {appointment.doctorFirstName}{" "}
-                {appointment.doctorLastName}
-              </p>
-              <p>
-                Patient Name: {appointment.patientFirstName}{" "}
-                {appointment.patientLastName}
-              </p>
-              <p>Start Time: {appointment.startTime}</p>
-              <p>End Time: {appointment.EndTime}</p>
-              <p>Location: {appointment.location}</p>
-              <p>mode: {appointment.mode}</p>
-              {appointment.prescription && userRole === "user" && (
-                <>
-                  <Button
-                    children="View Prescription"
-                    onClick={() => handleViewClick(appointment.prescription)}
-                  />
-                  <Button
-                    children="Download Prescription"
-                    onClick={() => downloadPDF(appointment.prescription)}
-                  />
-                </>
-              )}
-              {userRole === "doctor" && (
-                <>
-                  <Button
-                    children="Upload Prescription"
-                    onClick={() => bringUploadPrescription(appointment._id)}
-                  />
-                  <Button
-                    children="View Prescription"
-                    onClick={() => handleViewClick(appointment.prescription)}
-                  />
-                </>
-              )}
-            </div>
-          );
-        })}
+      {!showPdf && <h1>Appointment History</h1>}
+      {loading && <Loading />}
+      {!loading && appointments.length === 0 && <p>No appointment history</p>}
+      {!loading &&
+        appointments.map((appointment) => (
+          <div key={appointment._id}>
+            <p>
+              Doctor Name: {appointment.doctorFirstName}{" "}
+              {appointment.doctorLastName}
+            </p>
+            <p>
+              Patient Name: {appointment.patientFirstName}{" "}
+              {appointment.patientLastName}
+            </p>
+            <p>Start Time: {appointment.startTime}</p>
+            <p>End Time: {appointment.endTime}</p>
+            <p>Location: {appointment.location}</p>
+            <p>Mode: {appointment.mode}</p>
+            {appointment.prescription && userRole === "user" && (
+              <>
+                <Button
+                  onClick={() => handleViewClick(appointment.prescription)}
+                >
+                  View Prescription
+                </Button>
+                <Button onClick={() => downloadPDF(appointment.prescription)}>
+                  Download Prescription
+                </Button>
+              </>
+            )}
+            {userRole === "doctor" && (
+              <>
+                <Button
+                  onClick={() => bringUploadPrescription(appointment._id)}
+                >
+                  Upload Prescription
+                </Button>
+                <Button
+                  onClick={() => handleViewClick(appointment.prescription)}
+                >
+                  View Prescription
+                </Button>
+              </>
+            )}
+          </div>
+        ))}
       {showPdf && (
         <>
-          <Button children="Close" onClick={handleCloseClick} />
+          <Button onClick={handleCloseClick}>Close</Button>
           <PDFView pdfLink={pdfUrl} />
-          <Button children="Download" onClick={() => downloadPDF(pdfUrl)} />
+          <Button onClick={() => downloadPDF(pdfUrl)}>Download</Button>
         </>
       )}
-      {appointments.length === 0 && <p>No appointment history</p>}
-      {error && <p>{error}</p>}
+      {error && <p className="text-red-600">{error}</p>}
       {showUpload && (
         <>
           <form onSubmit={handleSubmit(uploadPrescription)}>
@@ -148,14 +155,14 @@ function History() {
               label="Upload Prescription"
               type="file"
               accept="application/pdf"
-              {...register("prescription")}
+              {...register("prescription", { required: true })}
             />
-            <Button children="Upload" type="submit" />
+            <Button type="submit">Upload</Button>
           </form>
         </>
       )}
     </div>
   );
-}
+};
 
 export default History;

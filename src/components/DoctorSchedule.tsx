@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { avaliableTimeService } from "../utils/avaliableTime.service";
-import { Button, Input } from "../components/index";
+import { Button, Input, Loading } from "../components/index";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Schedule {
@@ -81,7 +81,7 @@ function DoctorSchedule() {
   return (
     <div>
       <h1>Doctor Schedule</h1>
-      {loading && <p>Loading...</p>}
+      {loading && <Loading/>}
       {error && <p>{error}</p>}
       {schedules && schedules.length === 0 && (
         <p>No Available Time. Create Now.</p>
