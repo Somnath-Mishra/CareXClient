@@ -51,6 +51,7 @@ const History: React.FC = () => {
   const downloadPDF = (pdfUrl: string) => {
     const link = document.createElement("a");
     link.href = pdfUrl;
+    link.target = "_blank";
     link.download = "prescription.pdf";
     document.body.appendChild(link);
     link.click();
@@ -67,7 +68,11 @@ const History: React.FC = () => {
     setError("");
     appointmentService
       .addPrescription(appointmentId, data.prescription[0])
-      .then(() => {
+      .then((response) => {
+        console.log(response);
+        const updatedAppointments=response.data.data;
+        const index=appointments.findIndex((appointment) => appointment._id === updatedAppointments._id)
+        appointments[index]=updatedAppointments;
         alert("Prescription Upload Successful");
         setShowUpload(false);
         setLoading(false);
@@ -80,9 +85,12 @@ const History: React.FC = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     appointmentService
       .getAppointmentHistory()
       .then((res) => {
+        const appointmentsHistory=res.data.data;
+        console.log(appointmentsHistory);
         setAppointments(res.data.data);
         setLoading(false);
       })
@@ -98,6 +106,10 @@ const History: React.FC = () => {
       {loading && <Loading />}
       {!loading && appointments.length === 0 && <p>No appointment history</p>}
       {!loading &&
+        !showPdf &&
+        !showUpload &&
+        appointments &&
+        appointments.length > 0 &&
         appointments.map((appointment) => (
           <div key={appointment._id}>
             <p>
@@ -112,18 +124,25 @@ const History: React.FC = () => {
             <p>End Time: {appointment.endTime}</p>
             <p>Location: {appointment.location}</p>
             <p>Mode: {appointment.mode}</p>
-            {appointment.prescription && userRole === "user" && (
-              <>
-                <Button
-                  onClick={() => handleViewClick(appointment.prescription)}
-                >
-                  View Prescription
-                </Button>
-                <Button onClick={() => downloadPDF(appointment.prescription)}>
-                  Download Prescription
-                </Button>
-              </>
-            )}
+            {appointment.prescription &&
+              appointment.prescription.length > 0 &&
+              userRole === "user" && (
+                <>
+                  <Button
+                    onClick={() => handleViewClick(appointment.prescription)}
+                  >
+                    View Prescription
+                  </Button>
+                  <Button onClick={() => downloadPDF(appointment.prescription)}>
+                    Download Prescription
+                  </Button>
+                </>
+              )}
+            {(!appointment.prescription ||
+              appointment.prescription.length == 0) &&
+              userRole === "user" && (
+                <p>Prescription will be uploaded soon....</p>
+              )}
             {userRole === "doctor" && (
               <>
                 <Button
@@ -131,16 +150,19 @@ const History: React.FC = () => {
                 >
                   Upload Prescription
                 </Button>
-                <Button
-                  onClick={() => handleViewClick(appointment.prescription)}
-                >
-                  View Prescription
-                </Button>
+                {appointment.prescription &&
+                  appointment.prescription.length > 0 && (
+                    <Button
+                      onClick={() => handleViewClick(appointment.prescription)}
+                    >
+                      View Prescription
+                    </Button>
+                  )}
               </>
             )}
           </div>
         ))}
-      {showPdf && (
+      {showPdf && !showUpload && (
         <>
           <Button onClick={handleCloseClick}>Close</Button>
           <PDFView pdfLink={pdfUrl} />
@@ -148,7 +170,7 @@ const History: React.FC = () => {
         </>
       )}
       {error && <p className="text-red-600">{error}</p>}
-      {showUpload && (
+      {showUpload && !showPdf && (
         <>
           <form onSubmit={handleSubmit(uploadPrescription)}>
             <Input

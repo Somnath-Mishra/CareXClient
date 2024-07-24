@@ -22,7 +22,7 @@ function Header() {
     {
       name: "Signup",
       slug: "/signup",
-      active: (!authStatus && role!=='doctor'),
+      active: (!authStatus),
     },
     
     {
@@ -50,11 +50,11 @@ function Header() {
       slug:'/doctor/schedule',
       active:(authStatus && role==='doctor')
     },
-    {
-      name:'Signup',
-      slug:'/doctor/signup',
-      active:(authStatus && role==='doctor')
-    },
+    // {
+    //   name:'Signup',
+    //   slug:'/doctor/signup',
+    //   active:(authStatus && role==='doctor')
+    // },
     {
       name:'Profile',
       slug:'/doctor/profile',
