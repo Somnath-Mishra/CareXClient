@@ -7,8 +7,9 @@ interface PDFViewProps {
 
 const PDFView: React.FC<PDFViewProps> = ({ pdfLink }) => {
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  // const [pageNumber, setPageNumber] = useState<number>(1);
 
+  const pageNumber = 1;
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };

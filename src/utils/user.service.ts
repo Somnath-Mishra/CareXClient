@@ -55,7 +55,7 @@ class UserService{
             throw error;
         }
     }
-    async updateAvatar(data:updateAvatarInterface) {
+    async updateAvatar(data:any) {
         try {
             const formData = new FormData();
             formData.append('avatar', data);
@@ -68,7 +68,7 @@ class UserService{
             throw error;
         }
     }
-    async updateCoverImage(data:updateCoverImageInterface) {
+    async updateCoverImage(data:any) {
         try {
             const formData = new FormData();
             formData.append('coverImage', data);

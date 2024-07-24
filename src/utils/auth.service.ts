@@ -33,7 +33,7 @@ class AuthService {
         }
         return accessToken;
     }
-    async register(data: registerData) {
+    async register(data: any) {
         try {
             const response = await axiosInstanceWithoutCredentials.post('/user/register', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }

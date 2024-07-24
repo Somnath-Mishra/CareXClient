@@ -3,7 +3,7 @@ import { scheduleService } from "../utils/schedule.service";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { Button } from "./index";
+import { Button, Loading } from "./index";
 import useRazorpay from "react-razorpay";
 import { paymentService } from "../utils/payment.service";
 import { conf } from "../conf/conf";
@@ -26,7 +26,7 @@ interface ScheduleDetailsInterface {
 const Schedule: React.FC = () => {
   const [schedule, setSchedule] = useState<ScheduleDetailsInterface[]>([]);
   const navigate = useNavigate();
-  const Razorpay = useRazorpay();
+  const [Razorpay,isLoaded] = useRazorpay();
   const userId = useSelector((state: RootState) => state.user.userId);
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -140,10 +140,16 @@ const Schedule: React.FC = () => {
     }
   };
 
+  useEffect(()=>{
+    if(isLoaded){
+      // handlePaymentByRazorPay()
+    }
+  },[isLoaded,handlePaymentByRazorPay])
+
   return (
     <div>
       {error && <h4>{error}</h4>}
-      {loading && <p>Loading...</p>}
+      {loading && <Loading/>}
       {!loading && schedule.length === 0 && <h4>No schedule found</h4>}
       {schedule &&
         schedule.map((schedule) => (

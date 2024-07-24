@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input } from "./index";
 import { userService } from "../utils/user.service";
@@ -12,7 +12,7 @@ function UpdateCoverImage() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
-  const updateCoverImage = async (data) => {
+  const updateCoverImage = async (data:any) => {
     setError("");
     userService
       .updateCoverImage(data.coverImage[0])

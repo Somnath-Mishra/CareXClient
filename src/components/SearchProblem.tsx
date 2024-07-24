@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   clearSearchProblem,
   setSearchProblem,
 } from "../redux/slices/searchProblemSlice";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../redux/store";
+// import { RootState } from "../redux/store";
 import { userService } from "../utils/user.service";
 
 interface Disease {
@@ -17,20 +17,20 @@ const SearchProblem: React.FC = () => {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userId = useSelector((state: RootState) => state.user.userData?.userId);
+  // const userId = useSelector((state: RootState) => state.user.userData?.userId);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
 
-  const searchProblem = useSelector(
-    (state: RootState) => state.searchProblem.searchProblem
-  );
+  // const searchProblem = useSelector(
+  //   (state: RootState) => state.searchProblem.searchProblem
+  // );
 
   const fetchData = async () => {
     try {
       const response = await userService.getAllDiseaseList();
       setDiseaseList(response.data.data);
       setLoading(false);
-    } catch (error) {
+    } catch (error:any) {
       setError(error.message);
       setLoading(false);
       console.log(`Error occurred at fetchData() error: ${error.message}`);

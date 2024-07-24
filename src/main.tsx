@@ -1,8 +1,6 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./pages/ErrorPage.tsx";
 import ProblemPage from "./pages/ProblemPage.tsx";
 import Blog from "./pages/Blog.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -31,7 +29,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPageLayout />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
       {
         path: "signup",
@@ -46,7 +44,6 @@ const router = createBrowserRouter([
   {
     path: "user/",
     element: <UserLayout />,
-    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -108,7 +105,6 @@ const router = createBrowserRouter([
 
       {
         path: "*",
-        element: <ErrorPage />,
       },
       {
         path: "change-cover-image",
@@ -147,7 +143,6 @@ const router = createBrowserRouter([
   {
     path: "doctor/",
     element: <UserLayout />,
-    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -159,7 +154,6 @@ const router = createBrowserRouter([
       },
       {
         path: "*",
-        element: <ErrorPage />,
       },
       {
         path: "change-cover-image",

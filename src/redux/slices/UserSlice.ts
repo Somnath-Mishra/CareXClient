@@ -44,7 +44,7 @@ export const userSlice = createSlice({
     // Define a setUser action that takes a UserState as payload
     setUser: (state, action: PayloadAction<UserState>) => {
       state.isLoggedIn = action.payload.isLoggedIn;
-      state.userId = action.payload._id;
+      state.userId = action.payload.userId;
       state.userName = action.payload.userName;
       state.email = action.payload.email;
       state.phoneNumber = action.payload.phoneNumber;

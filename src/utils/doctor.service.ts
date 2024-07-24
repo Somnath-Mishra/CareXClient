@@ -1,4 +1,4 @@
-import { authService, registerData } from "./auth.service";
+import { authService } from "./auth.service";
 import { axiosInstanceWithCredentials, axiosInstanceWithoutCredentials } from "./axiosConfig";
 
 interface uploadDoctorSpecificDetailsInterface{
@@ -8,14 +8,14 @@ interface uploadDoctorSpecificDetailsInterface{
     visitFees: number,
     avaliableTimeIds:string[]
 }
-interface doctorRegisterInterface extends registerData{
-    role: 'doctor',
-    licence: File,
-    visitFees: number,
-    degree: string,
-    instituteName: string,
-    specialization:string[]
-}
+// interface doctorRegisterInterface extends registerData{
+//     role: 'doctor',
+//     licence: File,
+//     visitFees: number,
+//     degree: string,
+//     instituteName: string,
+//     specialization:string[]
+// }
 
 class DoctorService{
     constructor() { }
@@ -39,7 +39,7 @@ class DoctorService{
             throw error;
         }
     }
-    async register(data:doctorRegisterInterface) {
+    async register(data:any) {
         try {
             // const formData = new FormData();
             // formData.append('avatar', data.avatar);

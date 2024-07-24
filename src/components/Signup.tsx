@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -26,6 +26,19 @@ interface SignupFormInputs {
   coverImage: FileList;
 }
 
+// interface registerData {
+//   userName: string;
+//   email: string;
+//   phoneNumber: number;
+//   firstName: string;
+//   lastName: string;
+//   address: string;
+//   password: string;
+//   confirmPassword: string;
+//   avatar: File;
+//   coverImage: File;
+// }
+
 interface SignupFormExtraDetailsForDoctor {
   licence: FileList;
   visitFees: number;
@@ -47,14 +60,13 @@ function Signup() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<SignupFormInputs>();
 
   const {
     register: registerForDoctor,
     handleSubmit: handleSubmitForDoctor,
-    formState: { errors: doctorErrors },
+    // formState: { errors: doctorErrors },
   } = useForm<SignupFormExtraDetailsForDoctor>();
 
   const create: SubmitHandler<SignupFormInputs> = async (
@@ -83,7 +95,9 @@ function Signup() {
 
     try {
       if (data.role === Role.User) {
-        const response = await authService.register(formData);
+        const response = await authService.register(
+          formData 
+        );
         console.log(response);
         const userData = response?.data?.data;
         if (userData) {
@@ -121,7 +135,9 @@ function Signup() {
     }
 
     try {
-      const res = await doctorService.register(formDataDoctor);
+      const res = await doctorService.register(
+        formDataDoctor
+      );
       const userData = res?.data?.data;
       if (userData) {
         dispatch(authLogin(userData));
