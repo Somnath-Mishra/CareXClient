@@ -1,3 +1,4 @@
+
 import { Container, Logo, LogoutBtn } from "../index";
 import { useSelector, TypedUseSelectorHook } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,13 +7,13 @@ import { UserRootState } from "../../redux/slices/UserSlice";
 function Header() {
   const useTypedSelector: TypedUseSelectorHook<UserRootState> = useSelector;
   const authStatus = useTypedSelector((state) => state.user.isLoggedIn);
-  const role=useTypedSelector((state)=>state.user.role);
+  const role = useTypedSelector((state) => state.user.role);
 
   const navItems = [
     {
       name: "Home",
       slug: "/user",
-      active: (authStatus && role!=='doctor'),
+      active: authStatus && role !== "doctor",
     },
     {
       name: "Login",
@@ -22,13 +23,12 @@ function Header() {
     {
       name: "Signup",
       slug: "/signup",
-      active: (!authStatus),
+      active: !authStatus,
     },
-    
     {
       name: "Your Problem",
       slug: `/user/problem`,
-      active: (authStatus && role!=='doctor'),
+      active: authStatus && role !== "doctor",
     },
     {
       name: "Blog",
@@ -38,45 +38,45 @@ function Header() {
     {
       name: "Profile",
       slug: `/user/profile`,
-      active: (authStatus && role!=='doctor'),
+      active: authStatus && role !== "doctor",
     },
     {
-      name:'Home',
-      slug:'/doctor',
-      active:(authStatus && role==='doctor')
+      name: "Home",
+      slug: "/doctor",
+      active: authStatus && role === "doctor",
     },
     {
-      name:'Schedule',
-      slug:'/doctor/schedule',
-      active:(authStatus && role==='doctor')
+      name: "Schedule",
+      slug: "/doctor/schedule",
+      active: authStatus && role === "doctor",
     },
-    // {
-    //   name:'Signup',
-    //   slug:'/doctor/signup',
-    //   active:(authStatus && role==='doctor')
-    // },
     {
-      name:'Profile',
-      slug:'/doctor/profile',
-      active:(authStatus && role==='doctor')
-    }
+      name: "Profile",
+      slug: "/doctor/profile",
+      active: authStatus && role === "doctor",
+    },
   ];
 
   return (
-    <header>
+    <header className="bg-gray-800 p-4 shadow-lg">
       <Container>
-        <nav>
+        <nav className="flex items-center justify-between">
           <div>
             <Link to="/">
               <Logo width="70px" />
             </Link>
           </div>
-          <ul>
+          <ul className="flex space-x-4">
             {navItems.map((item) => {
               if (item.active) {
                 return (
                   <li key={item.slug}>
-                    <Link to={item.slug}>{item.name}</Link>
+                    <Link
+                      to={item.slug}
+                      className="text-white hover:text-gray-300 transition duration-300"
+                    >
+                      {item.name}
+                    </Link>
                   </li>
                 );
               }
