@@ -1,5 +1,5 @@
 import { axiosInstanceWithCredentials } from "./axiosConfig";
-import {authService} from "./auth.service";
+// import {authService} from "./auth.service";
 
 export interface changePasswordInterface{
     oldPassword: string,
@@ -25,7 +25,7 @@ class UserService{
     async changePassword(data:changePasswordInterface) {
         try {
             const response = await axiosInstanceWithCredentials.post('/user/change-password', data, {
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -36,7 +36,7 @@ class UserService{
     async getCurrentUserDetails() {
         try {
             const response = await axiosInstanceWithCredentials.get('/user/current-user',{
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -47,7 +47,7 @@ class UserService{
     async updateAccountDetails(data:updateAccountDetailsInterface) {
         try {
             const response = await axiosInstanceWithCredentials.patch('/user/update-account-details', data, {
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -60,7 +60,7 @@ class UserService{
             const formData = new FormData();
             formData.append('avatar', data);
             const response = await axiosInstanceWithCredentials.patch('/user/update-avatar', formData, {
-                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response;
         } catch (error) {
@@ -73,7 +73,7 @@ class UserService{
             const formData = new FormData();
             formData.append('coverImage', data);
             const response = await axiosInstanceWithCredentials.patch('/user/update-cover-image', formData, {
-                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response;
         } catch (error) {
@@ -84,7 +84,7 @@ class UserService{
     async getDoctorDetailsByPatientProblems(patientProblems: string) {
         try {
             const response = await axiosInstanceWithCredentials.post('/user/get-doctor-details-to-solve-problem', { patientProblems }, {
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -95,7 +95,7 @@ class UserService{
     async getAllDiseaseList() {
         try {
             const response = await axiosInstanceWithCredentials.get('/user/get-all-disease-list',{
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authService.getTokens()}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {

@@ -58,7 +58,7 @@ class AuthService {
     async logout() {
         try {
             const response = await axiosInstanceWithCredentials.post('/user/logout',{},{
-                headers: { 'Content-Type': 'application/json' ,'Authorization': `Bearer ${this.getTokens()}`}
+                headers: { 'Content-Type': 'application/json' }
             });
             return response;
         } catch (error) {

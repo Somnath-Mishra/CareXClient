@@ -1,5 +1,5 @@
 import { axiosInstanceWithCredentials } from "./axiosConfig";
-import { authService } from "./auth.service";
+// import { authService } from "./auth.service";
 
 enum modeEnum{
     online,
@@ -15,7 +15,7 @@ class ScheduleService{
                     startTime, endTime, mode, location
                 },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             )
             return response;
@@ -31,7 +31,7 @@ class ScheduleService{
                     scheduleId, startTime, endTime, mode, location
                 },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             )
             return response;
@@ -44,7 +44,7 @@ class ScheduleService{
         try {
             const response = await axiosInstanceWithCredentials.delete(`/schedule/delete-schedule`, 
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` },
+                    headers: { "Content-Type": "application/json" },
                     data:{
                         scheduleId
                     }
@@ -59,7 +59,7 @@ class ScheduleService{
     async getSchedules(doctorId:string) {
         try {
             const response = await axiosInstanceWithCredentials.get('/schedule/get-schedule', {
-                headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` },
+                headers: { "Content-Type": "application/json" },
                 params:{
                     doctorId
                 }

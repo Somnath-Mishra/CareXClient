@@ -36,7 +36,7 @@ class AppointmentService {
     async createAppointment(appointmentDetails: appointmentInterface) {
         try {
             const response = await axiosInstanceWithCredentials.post('/appointment/create-appointment', appointmentDetails, {
-                headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${this.getTokens()}` }
+                headers: { "Content-Type": "application/json" }
             })
             return response;
         } catch (error) {
@@ -50,7 +50,7 @@ class AppointmentService {
             const response = await axiosInstanceWithCredentials.post(`/appointment/cancel-appointment`,
                 {appointmentId},
                 {
-                    headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                    headers: { 'Content-type': 'application/json' }
                 },
 
             );
@@ -63,7 +63,7 @@ class AppointmentService {
     async getUpcomingAppointmentDetails() {
         try {
             const response = await axiosInstanceWithCredentials.get('/appointment/get-appointment-details', {
-                headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                headers: { 'Content-type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -77,7 +77,7 @@ class AppointmentService {
             formData.append('prescription', prescription);
             formData.append('appointmentId', appointmentId);
             const response = await axiosInstanceWithCredentials.post('/appointment/add-prescription', formData, {
-                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${this.getTokens()}` }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response;
         } catch (error) {
@@ -92,7 +92,7 @@ class AppointmentService {
                 paymentId: paymentId
             },
                 {
-                    headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                    headers: { 'Content-type': 'application/json' }
                 }
             );
             return response;
@@ -106,7 +106,7 @@ class AppointmentService {
             const response = await axiosInstanceWithCredentials.post('/appointment/update-appointment-status',
                 data,
                 {
-                    headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                    headers: { 'Content-type': 'application/json' }
                 }
             );
             return response;
@@ -118,7 +118,7 @@ class AppointmentService {
     async getPrescription(appointmentId: string) {
         try {
             const response = await axiosInstanceWithCredentials.get(`/appointment/get-prescription?appointmentId=${appointmentId}`, {
-                headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                headers: { 'Content-type': 'application/json' }
             });
             return response;
         } catch (error) {
@@ -129,7 +129,7 @@ class AppointmentService {
     async getAppointmentHistory() {
         try {
             const response = await axiosInstanceWithCredentials.get('/appointment/get-appointment-history', {
-                headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${this.getTokens()}` }
+                headers: { 'Content-type': 'application/json' }
             });
             return response;
         } catch (error) {

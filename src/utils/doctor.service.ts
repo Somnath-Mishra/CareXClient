@@ -4,7 +4,7 @@ import { axiosInstanceWithCredentials, axiosInstanceWithoutCredentials } from ".
 interface uploadDoctorSpecificDetailsInterface{
     degree: string,
     instituteName: string,
-    specialization: string[],
+    specialization: string,
     visitFees: number,
     avaliableTimeIds:string[]
 }
@@ -30,7 +30,7 @@ class DoctorService{
                     avaliableTimeIds: data.avaliableTimeIds
                 },
                 {
-                    headers: { "Content-Type": "application/json",'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             );
             return response;

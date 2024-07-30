@@ -1,5 +1,5 @@
 import { axiosInstanceWithCredentials } from "./axiosConfig";
-import { authService } from "./auth.service";
+// import { authService } from "./auth.service";
 
 class PaymentService {
     constructor() { }
@@ -10,7 +10,7 @@ class PaymentService {
                 doctorId: doctorId
             },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             );
             return response;
@@ -26,7 +26,7 @@ class PaymentService {
                 razorpay_signature: razorpay_signature
             },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             );
             return response;
@@ -44,7 +44,7 @@ class PaymentService {
                 doctorId: doctorId
             },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             );
             return response;
@@ -59,7 +59,7 @@ class PaymentService {
                 amount: amount
             },
                 {
-                    headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${authService.getTokens()}` }
+                    headers: { "Content-Type": "application/json" }
                 }
             );
             return response;

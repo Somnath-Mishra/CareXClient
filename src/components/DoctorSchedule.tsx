@@ -17,11 +17,15 @@ interface Schedule {
   _id: string;
   startTime: string;
   frequencyTime: number;
+  mode: string;
+  location: string;
 }
 
 interface ScheduleFormInputs {
   startTime: string;
   frequencyTime: number;
+  mode: string;
+  location: string;
 }
 
 function DoctorSchedule() {
@@ -70,7 +74,7 @@ function DoctorSchedule() {
   const createSchedule: SubmitHandler<ScheduleFormInputs> = (data) => {
     setLoading(true);
     avaliableTimeService
-      .createAvaliableTime(data.startTime, data.frequencyTime)
+      .createAvaliableTime(data.startTime, data.frequencyTime,data.mode,data.location)
       .then((response) => {
         const newSchedule = response.data;
         if (newSchedule) {
@@ -114,6 +118,8 @@ function DoctorSchedule() {
               <Typography>
                 Frequency of time in days: {schedule.frequencyTime}
               </Typography>
+              <Typography>Mode: {schedule.mode}</Typography>
+              <Typography>Location: {schedule.location}</Typography>
               <Button
                 variant="contained"
                 color="secondary"
@@ -155,6 +161,27 @@ function DoctorSchedule() {
             fullWidth
             margin="normal"
             {...register("frequencyTime", { required: true })}
+          />
+          <TextField
+            label="Mode"
+            select
+            fullWidth
+            margin="normal"
+            {...register("mode", { required: true })}
+            SelectProps={{
+              native: true,
+            }}
+          >
+            <option value="">Select Mode</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+          </TextField>
+          <TextField
+            label="Location"
+            type="text"
+            fullWidth
+            margin="normal"
+            {...register("location", { required: true })}
           />
           <Button
             type="submit"

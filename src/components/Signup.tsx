@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -81,8 +80,10 @@ function Signup() {
         const userData = response?.data?.data;
         if (userData) {
           dispatch(authLogin(userData));
+          alert("Registration successful");
+          alert("Now login to your account using email and password");
           setLoading(false);
-          navigate("/user");
+          navigate("/login");
         }
       }
       if (data.role === Role.Doctor) {
@@ -118,8 +119,10 @@ function Signup() {
       const userData = res?.data?.data;
       if (userData) {
         dispatch(authLogin(userData));
+        alert("Registration successful");
+        alert("Now login to your account using email and password");
         setLoading(false);
-        navigate("/doctor");
+        navigate("/login");
       }
     } catch (err: any) {
       setLoading(false);

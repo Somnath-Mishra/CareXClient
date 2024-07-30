@@ -4,11 +4,13 @@ import { axiosInstanceWithCredentials } from "./axiosConfig";
 class AvaliableTimeService{
     constructor() { }
     
-    async createAvaliableTime(dateTime: string, frequency:number) {
+    async createAvaliableTime(dateTime: string, frequency:number,mode:string,location:string) {
         try {
             const response = await axiosInstanceWithCredentials.post('/avaliableTime/create-avaliable-time', {
                 dateTime: dateTime,
-                frequency: frequency
+                frequency: frequency,
+                mode:mode,
+                location:location
             }, {
                 headers: { 'Content-Type': 'application/json' }
             });
