@@ -1,30 +1,23 @@
-# React + TypeScript + Vite
+# Few images for Demonstrations
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![alt text](./public/careximages/signup.png)
+![alt text](./public/careximages/doctorSignup.png)
+![alt text](./public/careximages/doctorSignupPage-2.png)
+![alt text](./public/careximages/login.png)
+![alt text](./public/careximages/Userappointment.png)
+![alt text](./public/careximages/searchHealthProblem.png)
+![alt text](./public/careximages/doctorList.png)
+![alt text](./public/careximages/paymentPage-1.png)
+![alt text](./public/careximages/paymentPage-2.png)
+![alt text](./public/careximages/paymentPage-3.png)
+![alt text](./public/careximages/userProfile.png)
+![alt text](./public/careximages/userAppointmentHIstory.png)
+![alt text](./public/careximages/userAppointmentHistorypage2.png)
+![alt text](./public/careximages/viewPrescription.png)
+![alt text](./public/careximages/creatingDoctorSchedule.png)
+![alt text](./public/careximages/creatingDoctorSchedule.png)
+![alt text](./public/careximages/doctorProfile.png)
+![alt text](./public/careximages/doctorSideAppointmentHistory.png)
+![alt text](./public/careximages/doctorSideAppointmentHistory2.png)
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
