@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react()],
   server:{
     proxy:{
-      // '/api': 'https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production',
-      '/api':'http://localhost:9000'
+      '/api': 'https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production',
+      // '/api':'http://localhost:9000'
     }
   }
 })
