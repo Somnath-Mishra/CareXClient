@@ -10,14 +10,14 @@ export default defineConfig({
     //   '/api': 'https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production',
     //   // '/api':'http://localhost:9000'
     // }
-    proxy: {
-      '/api': {
-        target: 'https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-      }
-    }
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     ws: true,
+    //   }
+    // }
   }
 })
 
