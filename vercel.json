@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production"
+    },
+    {
+      "source": "/test",
+      "destination": "https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production"
     }
   ]
 }
