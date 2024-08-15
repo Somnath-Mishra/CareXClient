@@ -1,8 +1,9 @@
 {
+    "cleanUrls":true,
   "rewrites": [
     {
       "source": "/api/:path",
-      "destination": "https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production/:path"
+      "destination": "https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production/api/:path"
     }
   ]
 }
