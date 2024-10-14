@@ -1,14 +1,15 @@
 import axios from "axios";
+import { conf } from "../conf/conf";
 
 //Axios instarnce with credentials
 export const axiosInstanceWithCredentials = axios.create({
-    baseURL: `/carex/v1`,
+    baseURL: `${conf.serverUrl}/api/v1`,
     withCredentials: true//This is important to include cookies in requests
 });
 
 //Axios instance without credentials
 export const axiosInstanceWithoutCredentials = axios.create({
-    baseURL: `/carex/v1`,
+    baseURL: `${conf.serverUrl}/api/v1`,
     withCredentials: false
 });
 
