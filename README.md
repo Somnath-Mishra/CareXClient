@@ -1,3 +1,11 @@
+# CareX
+
+## Deploy Link
+[Open Deploy Link](http://carex-client.s3-website.ap-south-1.amazonaws.com/)
+
+> **Note:** It's recommended to open the link in Firefox for the best experience.
+
+
 # Few images for Demonstrations
 
 ![alt text](./public/careximages/signup.png)
