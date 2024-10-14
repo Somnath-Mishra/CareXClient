@@ -1,9 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/carex/:path",
-      "destination": "https://txzazouq7a.execute-api.ap-south-1.amazonaws.com/production/carex/:path"
-    }
-  ]
-}
